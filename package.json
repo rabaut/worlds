@@ -1,0 +1,48 @@
+{
+  "name": "mmo",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "clean": "rimraf dist",
+    "webpack": "webpack --watch",
+    "dev": "npm run clean && firebase serve -p 5000 -o 0.0.0.0 | npm run webpack"
+  },
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@firebase/app-types": "0.x",
+    "faker": "^4.1.0",
+    "firebase": "^5.5.3",
+    "pixi.js": "^4.8.2",
+    "vue": "^2.5.17"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.0.0",
+    "@babel/core": "^7.0.0-0",
+    "@babel/plugin-proposal-class-properties": "^7.1.0",
+    "@babel/plugin-syntax-dynamic-import": "^7.0.0",
+    "@babel/plugin-transform-spread": "^7.0.0",
+    "@babel/polyfill": "^7.0.0",
+    "@babel/preset-env": "^7.1.0",
+    "babel-loader": "^8.0.4",
+    "css-loader": "^1.0.0",
+    "file-loader": "^2.0.0",
+    "firebase-tools": "^5.0.1",
+    "html-webpack-plugin": "^3.2.0",
+    "nanoid": "^1.2.6",
+    "path": "^0.12.7",
+    "postcss": "^7.0.5",
+    "postcss-loader": "^3.0.0",
+    "postcss-preset-env": "^6.0.10",
+    "rimraf": "^2.6.2",
+    "style-loader": "^0.23.0",
+    "url-loader": "^1.1.1",
+    "vue-loader": "^15.4.2",
+    "vue-style-loader": "^4.1.2",
+    "vue-template-compiler": "^2.5.17",
+    "webpack": "^4.20.2",
+    "webpack-bundle-analyzer": "^3.0.2",
+    "webpack-cli": "^3.1.2"
+  }
+}
