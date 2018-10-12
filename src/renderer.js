@@ -1,4 +1,5 @@
 import * as PIXI from 'pixi.js'
+import { OutlineFilter } from '@pixi/filter-outline'
 
 import * as Events from './events'
 
@@ -38,13 +39,13 @@ export default class Renderer {
 		const position = event.data.getLocalPosition(window.stage)
 
 		const pixelPosition = {
-			x: Math.floor(position.x),
-			y: Math.floor(position.y)
+			x: Math.round(position.x),
+			y: Math.round(position.y)
 		}
 
 		const tilePosition = {
-			x: Math.floor(position.x / Renderer.TILE_SIZE),
-			y: Math.floor(position.y / Renderer.TILE_SIZE)
+			x: Math.round(position.x / Renderer.TILE_SIZE),
+			y: Math.round(position.y / Renderer.TILE_SIZE)
 		}
 
 		let newEvent;
@@ -121,6 +122,14 @@ export default class Renderer {
 	removeTile = sprite => {
 		this.tilesContainer.removeChild(sprite)
 	}
+
+	addOutlineFilter = (sprite) => {
+    sprite.filters = [new OutlineFilter(1, 0xffffff, .1)]
+  }
+
+  removeFilters = (sprite) => {
+    sprite.filters = []
+  }
 
 	start = () => {
 		requestAnimationFrame(this.render)

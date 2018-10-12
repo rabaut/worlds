@@ -1,6 +1,7 @@
 import "@babel/polyfill";
 
 import Vue from "vue"
+import { Howl } from 'howler'
 
 import "style/index.css"
 
@@ -26,11 +27,21 @@ window.addEventListener('beforeunload', () => {
 window.addEventListener('leftclick', (event) => {
 	console.log('click', event.detail)
 
-	const { tilePosition, pixelPosition, target } = event.detail
+	const { tilePosition, target } = event.detail
 
-	if(window.Game.tiles[`${tilePosition.x}_${tilePosition.y}`]) {
-		window.Server.updateEntity(window.userId, { tX: pixelPosition.x, tY: pixelPosition.y })
+	const tileId = `${tilePosition.x}_${tilePosition.y}`
+
+	const targetTile = window.Game.tiles[tileId]
+
+	if(window.targetTile) {
+		window.Renderer.removeFilters(window.targetTile.sprite)
+		window.targetTile = null
 	}
+
+	window.targetTile = targetTile
+	window.Renderer.addOutlineFilter(window.targetTile.sprite)
+
+	window.Server.updateEntity(window.userId, { tX: tilePosition.x, tY: tilePosition.y })
 })
 
 window.addEventListener('rightclick', (event) => {
@@ -46,3 +57,9 @@ window.startGame = () => {
 }
 
 window.UI = new Vue(UI)
+
+// var backgroundMusic = new Howl({
+//   src: groveBackground,
+//   loop: true,
+//   volume: 0
+// })

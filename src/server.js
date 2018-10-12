@@ -36,7 +36,7 @@ export default class Server {
 		entitiesRef.on('child_removed', this.entityRemoved)
 
 		tilesRef.on('child_added', this.tileAdded)
-		tilesRef.on('child_changed', this.tileUpdated)
+		tilesRef.on('child_changed', this.tileAdded)
 		tilesRef.on('child_removed', this.tileRemoved)
 
 		messagesRef.on('child_added', this.messageAdded)
@@ -71,6 +71,8 @@ export default class Server {
 		  			this.createUser(data).then(() => console.log('user created'))
 	    		}
 					window.user = data
+
+					data.t = 0;
 
 	    		return this.createEntity(window.userId, data)
 		  	})
@@ -177,10 +179,6 @@ export default class Server {
 		}
 
 		window.Game.addTile(data.key, tileData)
-	}
-
-	tileUpdated = (data) => {
-		window.Game.updateTile(data.key, data.val())
 	}
 
 	tileRemoved = (data) => {

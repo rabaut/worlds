@@ -1,12 +1,12 @@
-import { Player } from './entities'
-import { Ground } from './tiles'
+import Entity from './entities'
+import Tile from './tiles'
 
 import { calculateMoveVector } from './util'
 
 export default class Game {
 	static TICK = 10
-	static SPEED = 1
-	static EPSILON = 1
+	static SPEED = .05
+	static EPSILON = 4
 
 	constructor() {
 		this.entities = {}
@@ -33,22 +33,30 @@ export default class Game {
 
 				if(entity.vX) {
 					entity.x += entity.vX * Game.SPEED
-					entity.sprite.x = Math.floor(entity.x)
 
-					if(entity.x <= entity.tX + Game.EPSILON && entity.x >= entity.tX - Game.EPSILON) {
+					const pixelX = Math.round(entity.x * 24)
+					const pixelDestX = Math.round(entity.tX * 24)
+
+					entity.sprite.x = pixelX
+
+					if(entity.sprite.x <= pixelDestX + Game.EPSILON && entity.sprite.x >= pixelDestX - Game.EPSILON) {
 						entity.x = entity.tX
-						entity.sprite.x = entity.tX
+						entity.sprite.x = pixelDestX
 						entity.vX = 0
 					}
 				}
 
 				if(entity.vY) {
 					entity.y += entity.vY * Game.SPEED
-					entity.sprite.y = Math.floor(entity.y)
 
-					if(entity.y <= entity.tY + Game.EPSILON && entity.y >= entity.tY - Game.EPSILON) {
+					const pixelY = Math.round(entity.y * 24)
+					const pixelDestY = Math.round(entity.tY * 24)
+
+					entity.sprite.y = pixelY
+
+					if(entity.sprite.y <= pixelDestY + Game.EPSILON && entity.sprite.y >= pixelDestY - Game.EPSILON) {
 						entity.y = entity.tY
-						entity.sprite.y = entity.tY
+						entity.sprite.y = pixelDestY
 						entity.vY = 0
 					}
 				}
@@ -76,7 +84,11 @@ export default class Game {
 	updateEntity = (id, updates) => {
 		const entity = this.entities[id]
 
-		if(updates.tX && updates.tY) {
+		if(!entity) {
+			return
+		}
+
+		if(updates.tX && updates.tY && (updates.tX !== entity.tX || updates.tY !== entity.tY)) {
 			delete entity.vX
 			delete entity.vY
 		}
@@ -93,7 +105,7 @@ export default class Game {
 	}
 
 	addEntity = (id, data) => {
-		const entity = Player({ id, ...data })
+		const entity = Entity(data)
 
 		if(entity.sprite) {
 			window.Renderer.addEntity(entity.sprite)
@@ -115,7 +127,11 @@ export default class Game {
 	}
 
 	addTile = (id, data) => {
-		const tile = new Ground(data)
+		const tile = Tile(data)
+
+		if(this.tiles[id]) {
+			this.removeTile(id)
+		}
 
 		if(tile.sprite) {
 			window.Renderer.addTile(tile.sprite)
@@ -124,14 +140,11 @@ export default class Game {
 		this.tiles[id] = tile
 	}
 
-	updateTile = (id, updates) => {
-		this.tiles[id] = {
-			...this.tiles[id],
-			...updates
-		}
-	}
-
 	removeTile = (id) => {
+		if(this.tiles[id].sprite) {
+			window.Renderer.removeEntity(this.tiles[id].sprite)
+		}
+
 		delete this.tiles[id]
 	}
 }
