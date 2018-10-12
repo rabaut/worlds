@@ -6,7 +6,15 @@
   "scripts": {
     "clean": "rimraf dist",
     "webpack": "webpack --watch",
-    "dev": "npm run clean && firebase serve -p 5000 -o 0.0.0.0 | npm run webpack"
+    "dev": "npm run clean && firebase serve -p 5000 -o 0.0.0.0 | npm run webpack",
+    "spritesheet": "aseprite -b --oneframe client/assets/sprites/*.png --sheet-pack --sheet client/assets/sheets/sheet.png --data client/assets/sheets/sheet.json",
+    "precommit": "lint-staged"
+  },
+  "lint-staged": {
+    "**/*.js": [
+      "prettier --no-semi --write",
+      "git add"
+    ]
   },
   "author": "",
   "license": "MIT",
@@ -32,11 +40,14 @@
     "file-loader": "^2.0.0",
     "firebase-tools": "^5.0.1",
     "html-webpack-plugin": "^3.2.0",
+    "husky": "^1.1.2",
+    "lint-staged": "^7.3.0",
     "nanoid": "^1.2.6",
     "path": "^0.12.7",
     "postcss": "^7.0.5",
     "postcss-loader": "^3.0.0",
     "postcss-preset-env": "^6.0.10",
+    "prettier": "^1.14.3",
     "rimraf": "^2.6.2",
     "style-loader": "^0.23.0",
     "url-loader": "^1.1.1",

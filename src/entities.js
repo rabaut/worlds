@@ -1,18 +1,18 @@
-import * as PIXI from 'pixi.js'
+import * as PIXI from "pixi.js"
 
 import human from "assets/sprites/creatures/human-male-0.png"
 import tree1 from "assets/sprites/plant-tree-1.png"
 import tree2 from "assets/sprites/plant-tree-2.png"
 
 const Player = ({ id, x, y, name, guild }) => {
-	const sprite = PIXI.Sprite.fromImage(human)
+  const sprite = PIXI.Sprite.fromImage(human)
 
-  guild = { name: 'Spaghetti Clan' }
+  guild = { name: "Spaghetti Clan" }
 
-	sprite.x = Math.floor(x * 24)
-	sprite.y = Math.floor(y * 24) 
+  sprite.x = Math.floor(x * 24)
+  sprite.y = Math.floor(y * 24)
 
-	sprite.anchor.set(0.5);
+  sprite.anchor.set(0.5)
 
   const nameStyle = new PIXI.TextStyle({
     fontFamily: "Verdana",
@@ -41,10 +41,7 @@ const Player = ({ id, x, y, name, guild }) => {
       strokeWidth: 2
     })
 
-    const guildNameText = new PIXI.Text(
-      `<${guild.name}>`,
-      guildNameStyle
-    )
+    const guildNameText = new PIXI.Text(`<${guild.name}>`, guildNameStyle)
 
     guildNameText.anchor.x = 0.5
     guildNameText.anchor.y = 0.5
@@ -57,11 +54,11 @@ const Player = ({ id, x, y, name, guild }) => {
 
   return {
     id,
-  	x,
-  	y,
-  	name,
-  	guild,
-  	sprite
+    x,
+    y,
+    name,
+    guild,
+    sprite
   }
 }
 
@@ -69,17 +66,17 @@ const Tree = (type, { x, y }) => {
   const image = type === 0 ? tree1 : tree2
   const sprite = PIXI.Sprite.fromImage(image)
 
-  guild = { name: 'Spaghetti Clan' }
+  guild = { name: "Spaghetti Clan" }
 
   sprite.x = x
-  sprite.y = y 
+  sprite.y = y
 
-  sprite.anchor.set(0.5);
+  sprite.anchor.set(0.5)
 }
 
 const Entity = ({ t: type, ...data }) => {
-  switch(type) {
-    case 0: 
+  switch (type) {
+    case 0:
       return Player(data)
     case 1:
     case 2:
