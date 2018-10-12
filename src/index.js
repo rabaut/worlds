@@ -39,6 +39,7 @@ window.addEventListener('leftclick', (event) => {
 	}
 
 	window.targetTile = targetTile
+	window.UI.selectedTile = targetTile
 	window.Renderer.addOutlineFilter(window.targetTile.sprite)
 
 	window.Server.updateEntity(window.userId, { tX: tilePosition.x, tY: tilePosition.y })

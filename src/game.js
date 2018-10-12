@@ -23,7 +23,7 @@ export default class Game {
 		Object.keys(this.entities).forEach(id => {
 			const entity = this.entities[id]
 
-			if(entity.tX && entity.tY) {
+			if(entity.tX !== undefined && entity.tY !== undefined) {
 				if(entity.vX === undefined && entity.vY === undefined) {
 					const { vX, vY } = calculateMoveVector(entity, { x: entity.tX, y: entity.tY })
 
@@ -88,15 +88,13 @@ export default class Game {
 			return
 		}
 
-		if(updates.tX && updates.tY && (updates.tX !== entity.tX || updates.tY !== entity.tY)) {
+		if(updates.tX !== undefined && updates.tY !== undefined && (updates.tX !== entity.tX || updates.tY !== entity.tY)) {
 			delete entity.vX
 			delete entity.vY
 		}
 
-		if(entity.x && entity.y) {
-			delete updates.x
-			delete updates.y
-		}
+		delete updates.x
+		delete updates.y
 
 		this.entities[id] = {
 			...entity,

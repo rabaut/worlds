@@ -24,6 +24,10 @@
 			</div>
 		</div>
 
+		<div class="selection-container">
+			<div class="tile" v-if="selectedTile">{{ selectedTile.x }} , {{ selectedTile.y }}</div>
+		</div>
+
 	</div>
 </template>
 
@@ -35,7 +39,8 @@ export default {
  		chatInput: '',
 		messages: [],
 		selectedSlot: 0,
-		slots: []
+		slots: [],
+		selectedTile: null
   },
 
   watch: {
@@ -89,6 +94,19 @@ form {
 
 form input {
 	width: 100%;
+}
+
+.selection-container {
+	z-index: 3;
+	position: absolute;
+	width: 4rem;
+	height: 3rem;
+	top: 0;
+	right: 0;
+	align-items: center;
+	justify-content: center;
+	background-color: black;
+	color: white;
 }
 
 .actionbar-container {
