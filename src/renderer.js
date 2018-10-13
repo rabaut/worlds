@@ -175,14 +175,14 @@ export default class Renderer {
   }
 
   render = () => {
-    const entity = window.Game.getEntity(window.userId)
+    const player = window.Game.entities.find(e => e.id === window.userId)
 
-    if (entity) {
-      window.stage.pivot.x = entity.sprite.x
-      window.stage.pivot.y = entity.sprite.y
+    if (player) {
+      window.stage.pivot.x = player.sprite.x
+      window.stage.pivot.y = player.sprite.y
 
-      window.stage.hitArea.x = entity.sprite.x - this.canvasRef.width / 2
-      window.stage.hitArea.y = entity.sprite.y - this.canvasRef.height / 2
+      window.stage.hitArea.x = player.sprite.x - this.canvasRef.width / 2
+      window.stage.hitArea.y = player.sprite.y - this.canvasRef.height / 2
     }
 
     window.pixi.render(window.stage)

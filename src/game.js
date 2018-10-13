@@ -8,13 +8,13 @@ export default class Game {
   static EPSILON = 1
 
   constructor() {
-    this.entities = {}
+    this.entities = []
     this.tiles = {}
   }
 
   update = delta => {
-    Object.keys(this.entities).forEach(id => {
-      const entity = this.entities[id]
+    for (let i = 0, length = this.entities.length; i < length; i++) {
+      const entity = this.entities[i]
 
       if (entity.tX !== undefined && entity.tY !== undefined) {
         if (entity.vX === undefined && entity.vY === undefined) {
@@ -68,23 +68,19 @@ export default class Game {
         delete entity.vX
         delete entity.vY
 
-        if (id === window.userId) {
+        if (entity === this.player) {
           const updates = { x: entity.x, y: entity.y }
           window.Server.updateUser(updates)
           window.Server.updateEntity(window.userId, updates)
         }
       }
-    })
+    }
   }
 
   unload = () => {}
 
-  getEntity = id => {
-    return this.entities[id]
-  }
-
   updateEntity = (id, updates) => {
-    const entity = this.entities[id]
+    const entity = this.entities.find(e => (e.id = id))
 
     if (!entity) {
       return
@@ -97,18 +93,14 @@ export default class Game {
     ) {
       delete entity.vX
       delete entity.vY
-    }
 
-    delete updates.x
-    delete updates.y
-
-    this.entities[id] = {
-      ...entity,
-      ...updates
+      entity.tX = updates.tX
+      entity.tY = updates.tY
     }
   }
 
-  addEntity = (id, data) => {
+  addEntity = data => {
+    console.log("adding entity", data)
     const entity = Entity(data)
 
     if (!entity) {
@@ -119,18 +111,18 @@ export default class Game {
       window.Renderer.addEntity(entity.sprite)
     }
 
-    this.entities[id] = entity
+    this.entities.push(entity)
   }
 
   removeEntity = id => {
-    const entity = this.entities[id]
+    const index = this.entities.findIndex(e => e.id === id)
 
-    if (entity) {
-      if (entity.sprite) {
-        window.Renderer.removeEntity(entity.sprite)
+    if (index) {
+      if (this.entities[index].sprite) {
+        window.Renderer.removeEntity(this.entities[index].sprite)
       }
 
-      delete this.entities[id]
+      delete this.entities[index]
     }
   }
 

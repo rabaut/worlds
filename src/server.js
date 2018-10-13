@@ -72,13 +72,12 @@ export default class Server {
           }
           window.user = data
 
+          data.id = window.userId
           data.eid = 1
 
           return this.createEntity(data, window.userId)
         })
         .then(() => {
-          const entity = window.Game.entities[window.userId]
-
           this.db
             .ref("entities/" + window.userId)
             .onDisconnect()
@@ -136,7 +135,10 @@ export default class Server {
   }
 
   entityAdded = data => {
-    window.Game.addEntity(data.key, data.val())
+    const clientData = data.val()
+    clientData.id = data.key
+
+    window.Game.addEntity(clientData)
   }
 
   entityUpdated = data => {

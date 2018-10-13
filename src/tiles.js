@@ -81,15 +81,15 @@ export default function Tile(serverData) {
 
   console.log("Creating Tile")
 
-  const data = {
-    ...serverData,
-    ...clientData
+  const spriteData = {
+    ...clientData,
+    ...serverData
   }
 
-  const sprite = Sprite(data)
+  const sprite = Sprite(spriteData)
 
   return {
-    ...data,
+    ...serverData,
     sprite
   }
 }

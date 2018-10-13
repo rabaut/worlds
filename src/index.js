@@ -90,6 +90,12 @@ window.addEventListener("keydown", event => {
 window.startGame = () => {
   window.Server.start()
   MainLoop.start()
+
+  //logFPS()
+}
+
+function logFPS() {
+  setInterval(() => console.log("FPS: ", MainLoop.getFPS()), 2000)
 }
 
 window.UI = new Vue(UI)
