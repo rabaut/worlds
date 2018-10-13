@@ -42,14 +42,14 @@ export default class Renderer {
   onPointerDown = event => {
     const position = event.data.getLocalPosition(window.stage)
 
-    const pixelPosition = {
-      x: Math.round(position.x),
-      y: Math.round(position.y)
-    }
-
     const tilePosition = {
       x: Math.round(position.x / Renderer.TILE_SIZE),
       y: Math.round(position.y / Renderer.TILE_SIZE)
+    }
+
+    const pixelPosition = {
+      x: Math.round(tilePosition.x * Renderer.TILE_SIZE),
+      y: Math.round(tilePosition.y * Renderer.TILE_SIZE)
     }
 
     let newEvent
@@ -72,8 +72,8 @@ export default class Renderer {
     }
 
     const pixelPosition = {
-      x: Math.round(tilePosition.x * 24),
-      y: Math.round(tilePosition.y * 24)
+      x: Math.round(tilePosition.x * Renderer.TILE_SIZE),
+      y: Math.round(tilePosition.y * Renderer.TILE_SIZE)
     }
 
     window.UI.selectedTile = tilePosition
@@ -158,7 +158,12 @@ export default class Renderer {
     this.outline = new PIXI.Graphics()
 
     this.outline.lineStyle(1, 0x0, 1)
-    this.outline.drawRect(position.x - 12, position.y - 12, 24, 24)
+    this.outline.drawRect(
+      position.x - Math.round(Renderer.TILE_SIZE / 2),
+      position.y - Math.round(Renderer.TILE_SIZE / 2),
+      Renderer.TILE_SIZE,
+      Renderer.TILE_SIZE
+    )
     this.topContainer.addChild(this.outline)
   }
 
@@ -169,15 +174,7 @@ export default class Renderer {
     }
   }
 
-  start = () => {
-    requestAnimationFrame(this.render)
-
-    console.log("[RENDERER]: Started")
-  }
-
   render = () => {
-    requestAnimationFrame(this.render)
-
     const entity = window.Game.getEntity(window.userId)
 
     if (entity) {

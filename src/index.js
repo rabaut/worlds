@@ -2,6 +2,7 @@ import "@babel/polyfill"
 
 import Vue from "vue"
 import { Howl } from "howler"
+import MainLoop from "mainloop.js"
 
 import "style/index.css"
 
@@ -20,6 +21,8 @@ Vue.config.productionTip = false
 window.Server = new Server()
 window.Game = new Game()
 window.Renderer = new Renderer()
+
+MainLoop.setUpdate(window.Game.update).setDraw(window.Renderer.render)
 
 window.addEventListener("beforeunload", () => {
   render.unload()
@@ -86,8 +89,7 @@ window.addEventListener("keydown", event => {
 
 window.startGame = () => {
   window.Server.start()
-  window.Game.start()
-  window.Renderer.start()
+  MainLoop.start()
 }
 
 window.UI = new Vue(UI)

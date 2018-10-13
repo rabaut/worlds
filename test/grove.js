@@ -10,59 +10,74 @@ var config = {
   projectId: "worlds-218723",
   storageBucket: "worlds-218723.appspot.com",
   messagingSenderId: "680537427781"
-};
+}
 
-firebase.initializeApp(config);
+firebase.initializeApp(config)
 
-var db = firebase.database();
-
-var tiles = []
+var db = firebase.database()
 
 var start = -20
 var end = Math.abs(start)
 
 var randomXY = () => {
-	return {
-		x: Math.floor(Math.random() * 600),
-		y: Math.floor(Math.random() * 600)
-	}
+  return {
+    x: Math.floor(Math.random() * 600),
+    y: Math.floor(Math.random() * 600)
+  }
 }
 
-for(let x = start; x <= end; x++) {
-	for(let y = start; y <= end; y++) {
-		if(x === 0 && y === 0) {
-			t = 4
-		}
-		else if(x > -2 && x < 2 && y > -2 && y < 2) {
-			t = 0
-		}
-		else if (x > -9 && x < 9 && y > -9 && y < 9) {
-			t = 6
-		}
-		else if( x === -1 || y === -1 || x === 1 || y === 1 || x === 0 || y === 0 || 
-			x === start || y === start || x === start + 1 || y === start + 1 || x === start + 2 || y === start + 2 || 
-			x === end  || y === end || x === end - 1  || y === end -1 || x === end -2 || y === end -2) {
-			t = 6
-		} else {
-			t = Math.floor(Math.random() * 20)
-			if(t > 3) {
-				t = 0
-			}
-		}
+var tid
 
-		var tile = {
-			x,
-			y,
-			t
-		}
+var promises = []
 
-		tiles.push(tile)
+for (let x = start; x <= end; x++) {
+  for (let y = start; y <= end; y++) {
+    if (x === 0 && y === 0) {
+      tid = 1
+    } else if (x > -2 && x < 2 && y > -2 && y < 2) {
+      tid = 1
+    } else if (x > -9 && x < 9 && y > -9 && y < 9) {
+      tid = 5
+    } else if (
+      x === -1 ||
+      y === -1 ||
+      x === 1 ||
+      y === 1 ||
+      x === 0 ||
+      y === 0 ||
+      x === start ||
+      y === start ||
+      x === start + 1 ||
+      y === start + 1 ||
+      x === start + 2 ||
+      y === start + 2 ||
+      x === end ||
+      y === end ||
+      x === end - 1 ||
+      y === end - 1 ||
+      x === end - 2 ||
+      y === end - 2
+    ) {
+      tid = 5
+    } else {
+      t = Math.floor(Math.random() * 20)
+      if (t > 4) {
+        tid = 1
+      }
+    }
 
-		console.log(x, y, t)
+    var tile = {
+      tid
+    }
 
-		db.ref('tiles/' + `${x}_${y}`).set(tile)
-	}
+    promises.push(db.ref("tiles/" + `${x}_${y}`).set(tile))
+  }
 }
+
+Promise.all(promises).then(() => {
+  console.log("Grove generated")
+  process.exit()
+})
 
 // var updateInterval = setInterval(() => {
 // 	for(let i = 0; i < 10; i++) {

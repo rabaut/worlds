@@ -4,22 +4,15 @@ import Tile from "./tiles"
 import { calculateMoveVector } from "./util"
 
 export default class Game {
-  static TICK = 10
-  static SPEED = 0.05
-  static EPSILON = 4
+  static SPEED = 0.005
+  static EPSILON = 1
 
   constructor() {
     this.entities = {}
     this.tiles = {}
   }
 
-  start = () => {
-    setInterval(this.update, Game.TICK)
-
-    console.log("[GAME]: Started")
-  }
-
-  update = () => {
+  update = delta => {
     Object.keys(this.entities).forEach(id => {
       const entity = this.entities[id]
 
@@ -35,7 +28,7 @@ export default class Game {
         }
 
         if (entity.vX) {
-          entity.x += entity.vX * Game.SPEED
+          entity.x += entity.vX * delta * Game.SPEED
 
           const pixelX = Math.round(entity.x * 24)
           const pixelDestX = Math.round(entity.tX * 24)
@@ -53,7 +46,7 @@ export default class Game {
         }
 
         if (entity.vY) {
-          entity.y += entity.vY * Game.SPEED
+          entity.y += entity.vY * delta * Game.SPEED
 
           const pixelY = Math.round(entity.y * 24)
           const pixelDestY = Math.round(entity.tY * 24)
