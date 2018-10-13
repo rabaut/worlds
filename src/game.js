@@ -118,6 +118,10 @@ export default class Game {
   addEntity = (id, data) => {
     const entity = Entity(data)
 
+    if (!entity) {
+      return
+    }
+
     if (entity.sprite) {
       window.Renderer.addEntity(entity.sprite)
     }
@@ -139,6 +143,10 @@ export default class Game {
 
   addTile = (id, data) => {
     const tile = Tile(data)
+
+    if (!tile) {
+      return
+    }
 
     if (this.tiles[id]) {
       this.removeTile(id)

@@ -3,6 +3,8 @@ import "firebase/database"
 import "firebase/auth"
 import faker from "faker"
 
+import Types from "./types"
+
 var config = {
   apiKey: "AIzaSyB6ka4E1V31LnL-eSBZBiLPaYaTjQvZPGo",
   authDomain: "worlds-218723.firebaseapp.com",
@@ -70,9 +72,9 @@ export default class Server {
           }
           window.user = data
 
-          data.t = 0
+          data.eid = 1
 
-          return this.createEntity(window.userId, data)
+          return this.createEntity(data, window.userId)
         })
         .then(() => {
           const entity = window.Game.entities[window.userId]
@@ -107,7 +109,15 @@ export default class Server {
       .catch(console.error)
   }
 
-  createEntity = (id, data) => {
+  createEntity = (data, id) => {
+    if (!id) {
+      return this.db
+        .ref("entities/")
+        .push()
+        .set(data)
+        .catch(console.error)
+    }
+
     return this.db
       .ref("entities/" + id)
       .set(data)
@@ -137,24 +147,11 @@ export default class Server {
     window.Game.removeEntity(data.key)
   }
 
-  createTile = ({ x, y }) => {
+  createTile = (tid, { x, y }) => {
     const id = `${x}_${y}`
 
-    let type
-
-    if (window.UI.selectedSlot === 0) {
-      type = Math.floor(Math.random() * Math.floor(12))
-      if (type > 3) {
-        type = 0
-      }
-    } else if (window.UI.selectedSlot === 1) {
-      type = 4
-    } else if (window.UI.selectedSlot === 2) {
-      type = 5
-    }
-
     const serverData = {
-      t: type
+      tid
     }
 
     return this.db
@@ -191,12 +188,13 @@ export default class Server {
   }
 
   createMessage = data => {
-    const pushKey = this.db.ref("messages/").push().key
-
-    this.db.ref("messages/" + pushKey).set({
-      s: window.user.name,
-      c: data
-    })
+    return this.db
+      .ref("messages/")
+      .push()
+      .set({
+        s: window.user.name,
+        c: data
+      })
   }
 
   messageAdded = data => {

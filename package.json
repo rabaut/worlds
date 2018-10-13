@@ -7,7 +7,7 @@
     "clean": "rimraf dist",
     "webpack": "webpack --watch",
     "dev": "npm run clean && firebase serve -p 5000 -o 0.0.0.0 | npm run webpack",
-    "spritesheet": "aseprite -b --oneframe client/assets/sprites/*.png --sheet-pack --sheet client/assets/sheets/sheet.png --data client/assets/sheets/sheet.json",
+    "spritesheet": "/Applications/Aseprite.app/Contents/MacOS/aseprite -b --oneframe assets/sprites/*.png --sheet-pack --sheet assets/sheets/sheet.png --data assets/sheets/sheet.json",
     "precommit": "lint-staged"
   },
   "lint-staged": {

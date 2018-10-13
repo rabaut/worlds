@@ -2,10 +2,10 @@
 	<div class="ui">
 		<div class="actionbar-container">
 			<div class="actionbar">
-				<div v-on:click="selectedSlot = 0" :class="{ slot: true, selected: selectedSlot === 0 }" />
 				<div v-on:click="selectedSlot = 1" :class="{ slot: true, selected: selectedSlot === 1 }" />
 				<div v-on:click="selectedSlot = 2" :class="{ slot: true, selected: selectedSlot === 2 }" />
 				<div v-on:click="selectedSlot = 3" :class="{ slot: true, selected: selectedSlot === 3 }" />
+				<div v-on:click="selectedSlot = 4" :class="{ slot: true, selected: selectedSlot === 4 }" />
 			</div>
 		</div>
 
@@ -38,7 +38,7 @@ export default {
   data: {
  		chatInput: '',
 		messages: [],
-		selectedSlot: 0,
+		selectedSlot: 1,
 		slots: [],
 		selectedTile: null
   },

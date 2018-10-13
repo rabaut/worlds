@@ -155,12 +155,10 @@ export default class Renderer {
 
   addOutline = position => {
     this.removeOutline()
-
     this.outline = new PIXI.Graphics()
 
     this.outline.lineStyle(1, 0x0, 1)
     this.outline.drawRect(position.x - 12, position.y - 12, 24, 24)
-
     this.topContainer.addChild(this.outline)
   }
 

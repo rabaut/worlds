@@ -1,4 +1,21 @@
-import { random } from "shared/utils"
+import * as PIXI from "pixi.js"
+
+import "assets/sheets/sheet.png"
+import { randomItem } from "./util"
+
+var data = require("../assets/sheets/sheet.json")
+
+var spritesheet
+
+PIXI.loader.add("sheetImage", data.meta.image).load((loader, resources) => {
+  spritesheet = new PIXI.Spritesheet(
+    resources.sheetImage.texture.baseTexture,
+    data
+  )
+  spritesheet.parse(() => {
+    console.log("sheet made")
+  })
+})
 
 export default function Sprite({ src, frames, x, y, speed }) {
   let sprite
@@ -12,16 +29,18 @@ export default function Sprite({ src, frames, x, y, speed }) {
 
     sprite.play()
   } else {
-    src = Array.isArray(src) ? random(src) : src
+    src = Array.isArray(src) ? randomItem(src) : src
 
-    sprite = new PIXI.Sprite(PIXI.loader.resources["sheet"].textures[src])
+    const texture = spritesheet.textures[src]
+
+    sprite = new PIXI.Sprite(texture)
   }
 
   sprite.anchor.x = 0.5
   sprite.anchor.y = 0.5
 
-  sprite.position.x = x * 24 + 12
-  sprite.position.y = y * 24 + 12
+  sprite.position.x = x * 24
+  sprite.position.y = y * 24
 
   return sprite
 }

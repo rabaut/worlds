@@ -10,7 +10,10 @@ import Server from "./server"
 import Game from "./game"
 import UI from "./ui.vue"
 
+import { PLANTS } from "./entities"
+
 import { addEntity } from "./events"
+import { randomItem } from "./util"
 
 Vue.config.productionTip = false
 
@@ -46,7 +49,39 @@ window.addEventListener("leftclick", event => {
 window.addEventListener("rightclick", event => {
   console.log("click", event.detail)
 
-  window.Server.createTile(event.detail)
+  if (window.UI.selectedSlot === 4) {
+    const { eid } = randomItem(PLANTS)
+
+    event.detail.eid = eid
+
+    window.Server.createEntity(event.detail)
+    return
+  }
+
+  let tid
+
+  if (window.UI.selectedSlot === 1) {
+    tid = Math.floor(Math.random() * Math.floor(12))
+    if (tid === 0 || tid > 4) {
+      tid = 1
+    }
+  } else if (window.UI.selectedSlot === 2) {
+    tid = 5
+  } else if (window.UI.selectedSlot === 3) {
+    tid = 6
+  }
+
+  window.Server.createTile(tid, event.detail)
+})
+
+window.addEventListener("keydown", event => {
+  switch (event.key) {
+    case "1":
+    case "2":
+    case "3":
+    case "4":
+      window.UI.selectedSlot = +event.key
+  }
 })
 
 window.startGame = () => {

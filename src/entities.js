@@ -1,18 +1,109 @@
 import * as PIXI from "pixi.js"
 
-import human from "assets/sprites/creatures/human-male-0.png"
-import tree1 from "assets/sprites/plant-tree-1.png"
-import tree2 from "assets/sprites/plant-tree-2.png"
+import Sprite from "./sprite"
 
-const Player = ({ id, x, y, name, guild }) => {
-  const sprite = PIXI.Sprite.fromImage(human)
+import Types from "./types"
 
-  guild = { name: "Spaghetti Clan" }
+export const PLAYERS = [
+  {
+    eid: 1,
+    src: "player-male-0.png"
+  },
+  {
+    eid: 2,
+    src: "player-female-0.png"
+  }
+].map(player => ({ ...player, type: Types.PLAYER }))
 
-  sprite.x = Math.floor(x * 24)
-  sprite.y = Math.floor(y * 24)
+export const BEASTS = [
+  {
+    eid: 3,
+    name: "Brown Bear",
+    frames: ["creature-bear-brown-1.png", "creature-bear-brown-2.png"]
+  },
+  {
+    eid: 4,
+    name: "Black Bear",
+    frames: ["creature-bear-black-1.png", "creature-bear-black-2.png"]
+  },
+  {
+    eid: 5,
+    name: "Brown Wolf",
+    frames: ["creature-wolf-brown-1.png", "creature-wolf-brown-2.png"]
+  },
+  {
+    eid: 6,
+    name: "Black Wolf",
+    frames: ["creature-wolf-black-1.png", "creature-wolf-black-2.png"]
+  }
+].map(beast => ({ ...beast, type: Types.BEAST }))
 
-  sprite.anchor.set(0.5)
+export const PLANTS = [
+  {
+    eid: 7,
+    name: "Willow Tree",
+    src: "plant-tree-1.png"
+  },
+  {
+    eid: 8,
+    name: "Pine Tree",
+    src: "plant-tree-2.png"
+  },
+  {
+    eid: 9,
+    name: "Waste Pine Tree",
+    src: "plant-tree-3.png"
+  },
+  {
+    eid: 10,
+    name: "Waste Willow Tree",
+    src: "plant-tree-4.png"
+  },
+  {
+    eid: 11,
+    name: "Waste Tree",
+    src: "plant-tree-5.png"
+  },
+  {
+    eid: 12,
+    name: "Cactus",
+    src: ["plant-cactus-1.png", "plant-cactus-2.png", "plant-cactus-3.png"]
+  },
+  {
+    eid: 13,
+    name: "Bush",
+    src: ["plant-bush-1.png", "plant-bush-2.png"]
+  },
+  {
+    eid: 14,
+    name: "Small Bush",
+    src: "plant-bush-5.png"
+  },
+  {
+    eid: 15,
+    name: "Bushes",
+    src: ["plant-bush-3.png", "plant-bush-4.png"]
+  },
+  {
+    eid: 16,
+    name: "Flower",
+    src: ["plant-flower-1.png", "plant-flower-2.png", "plant-flower-3.png"]
+  }
+].map(plant => ({ ...plant, type: Types.PLANT, collidable: true }))
+
+export const ENTITIES = [...PLAYERS, ...BEASTS, ...PLANTS].reduce(
+  (obj, entity) => ({
+    ...obj,
+    [entity.eid]: entity
+  }),
+  {}
+)
+
+const Player = data => {
+  console.log("Creating Player")
+  const sprite = Sprite(data)
+
+  const guild = { name: "Spaghetti Clan" }
 
   const nameStyle = new PIXI.TextStyle({
     fontFamily: "Verdana",
@@ -22,7 +113,7 @@ const Player = ({ id, x, y, name, guild }) => {
     strokeWidth: 1
   })
 
-  const nameText = new PIXI.Text(name, nameStyle)
+  const nameText = new PIXI.Text(data.name, nameStyle)
 
   nameText.anchor.x = 0.5
   nameText.anchor.y = 0.5
@@ -35,13 +126,13 @@ const Player = ({ id, x, y, name, guild }) => {
   if (guild) {
     const guildNameStyle = new PIXI.TextStyle({
       fontFamily: "Verdana",
-      fontSize: 12,
-      fill: "#000",
-      stroke: "#000",
-      strokeWidth: 2
+      fontSize: 10,
+      fill: "#fff",
+      stroke: "#fff",
+      strokeWidth: 1
     })
 
-    const guildNameText = new PIXI.Text(`<${guild.name}>`, guildNameStyle)
+    const guildNameText = new PIXI.Text(guild.name, guildNameStyle)
 
     guildNameText.anchor.x = 0.5
     guildNameText.anchor.y = 0.5
@@ -53,35 +144,34 @@ const Player = ({ id, x, y, name, guild }) => {
   }
 
   return {
-    id,
-    x,
-    y,
-    name,
-    guild,
+    ...data,
     sprite
   }
 }
 
-const Tree = (type, { x, y }) => {
-  const image = type === 0 ? tree1 : tree2
-  const sprite = PIXI.Sprite.fromImage(image)
+const Plant = data => {
+  console.log("Creating Plant")
+  const sprite = Sprite(data)
 
-  guild = { name: "Spaghetti Clan" }
-
-  sprite.x = x
-  sprite.y = y
-
-  sprite.anchor.set(0.5)
-}
-
-const Entity = ({ t: type, ...data }) => {
-  switch (type) {
-    case 0:
-      return Player(data)
-    case 1:
-    case 2:
-      return Tree(type, data)
+  return {
+    ...data,
+    sprite
   }
 }
 
-export default Entity
+export default function Entity(serverData) {
+  const entity = ENTITIES[serverData.eid]
+
+  if (!entity) {
+    return
+  }
+
+  const clientData = { ...entity, ...serverData }
+
+  switch (entity.type) {
+    case Types.PLAYER:
+      return Player(clientData)
+    case Types.PLANT:
+      return Plant(clientData)
+  }
+}
